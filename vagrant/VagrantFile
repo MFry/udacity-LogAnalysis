@@ -71,6 +71,7 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
+        sudo add-apt-repository ppa:jonathonf/python-3.6
         # updates the list of available packages and their versions, but it does not install or upgrade any packages.
         sudo apt-get -qq update
         # actually installs newer versions of the packages you have. After updating the lists, the package manager knows about available updates for the software you have installed.
@@ -79,26 +80,30 @@ Vagrant.configure("2") do |config|
         sudo apt-get -qq build-dep build-essential
         # Install git
         sudo apt-get -qq build-dep git
+        sudo apt-get -qq install git
         ##############################
-        # Yarn and Node Installation #
+        #   Python Install           #
         ##############################
-        sudo apt-get install yarn
-        curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
-        sudo apt-get install -qq nodejs
-        # Install Source Code Pro font
-        sudo apt-get -qq install fontconfig
-        [ -d /usr/share/fonts/opentype ] || sudo mkdir /usr/share/fonts/opentype
-        sudo git clone https://github.com/adobe-fonts/source-code-pro.git /usr/share/fonts/opentype/scp
-        sudo fc-cache -f -v
+        sudo apt-get install python3.6 python3-pip python3-dev virtualenv
+        pip3 install --upgrade pip
+        pip3 install --upgrade virtualenv
+        virtualenv -p python3.6 /vagrant/py36env
+        pip3 install sqlalchemy psycopg2 bleach requests
         ##############################
         #   PostgreSQL Install       #
         ##############################
         sudo apt-get -qq build-dep postgresql
-        vagrantTip="The shared directory is located at /vagrant\nTo access your shared files: cd /vagrant"
+        sudo apt-get -qq install postgresql postgresql-client postgresql-contrib
+        sudo -u postgres psql -c "CREATE USER ubuntu WITH CREATEDB ENCRYPTED PASSWORD 'vagrant'"
+        su postgres -c 'createuser -dRS vagrant'
+        su vagrant -c 'createdb'
+        su vagrant -c 'createdb news'
+        su vagrant -c 'createdb forum'
+        su vagrant -c 'psql forum -f /vagrant/forum/forum.sql'
+
+        vagrantTip="The shared directory is located at /vagrant.\nTo access your shared files: cd /vagrant.\nDatabase \"news\" is connected via psql. To connect, use: psql -d news"
         echo -e $vagrantTip > /etc/motd
    SHELL
-  # Change the vagrant user's shell to zsh
-  config.vm.provision :shell, inline: "chsh -s /bin/zsh vagrant"
 
   #config.vm.provision :shell, :path => "postgresql_provisions.sh"
   #config.vm.provision :shell, :path => "python_provisions.sh"
