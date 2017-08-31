@@ -1,4 +1,4 @@
-.vagrant/
+#.vagrant/
 virtualenv/
 
 # Byte-compiled / optimized / DLL files
