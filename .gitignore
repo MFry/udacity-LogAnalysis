@@ -1,4 +1,7 @@
-#.vagrant/
+.vagrant/
+
+#Special large file
+vagrant/newsdata.sql
 virtualenv/
 
 # Byte-compiled / optimized / DLL files
