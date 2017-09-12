@@ -84,11 +84,16 @@ Vagrant.configure("2") do |config|
         ##############################
         #   Python Install           #
         ##############################
-        sudo apt-get install python3.6 python3-pip python3-dev virtualenv
-        pip3 install --upgrade pip
+        sudo apt-get -qq install python3.6 python3.6-dev python3.6-venv virtualenv
+        wget https://bootstrap.pypa.io/get-pip.py
+        sudo python3.6 get-pip.py
+        sudo ln -s /usr/bin/python3.6 /usr/local/bin/python3
+        sudo ln -s /usr/local/bin/pip /usr/local/bin/pip3
         pip3 install --upgrade virtualenv
-        virtualenv -p python3.6 /vagrant/py36env
-        pip3 install sqlalchemy psycopg2 bleach requests
+        virtualenv -p python3.6 /vagrant/analysis/py36env
+        source /vagrant/analysis/py36env/bin/active & cd/vagrant/analysis/ & make -f Makefile
+        sudo rm get-pip.py
+        #pip3 install sqlalchemy psycopg2 bleach requests
         ##############################
         #   PostgreSQL Install       #
         ##############################
@@ -102,10 +107,25 @@ Vagrant.configure("2") do |config|
         su ubuntu -c 'createdb news'
         su ubuntu -c 'createdb forum'
         su ubuntu -c 'psql forum -f /vagrant/newsdata.sql'
+        
+        echo "Configuring postgresql.conf"
+        sudo echo "listen_addresses = '*'" >> /etc/postgresql/9.5/main/postgresql.conf
+        sudo echo "logging_collector = on" >> /etc/postgresql/9.5/main/postgresql.conf
+
+        # Edit to allow socket access, not just local unix access
+        echo "Patching pg_hba to change -> socket access"
+        sudo echo "host all all all md5" >> /etc/postgresql/9.5/main/pg_hba.conf
+        sudo echo "host all all 0.0.0.0/0 trust" >> /etc/postgresql/9.5/main/pg_hba.conf
+
+        echo "Patching complete, restarting"
+        sudo service postgresql restart
 
 
         vagrantTip="The shared directory is located at /vagrant.\nTo access your shared files: cd /vagrant.\nDatabase \"news\" is connected via psql. To connect, use: psql -d news"
         echo -e $vagrantTip > /etc/motd
+        sudo apt-get -qq update
+        sudo apt-get -qq upgrade
+        echo "cd /vagrant/analysis" >> /home/vagrant/.bashrc
    SHELL
 
   #config.vm.provision :shell, :path => "postgresql_provisions.sh"

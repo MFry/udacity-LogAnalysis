@@ -1,8 +1,12 @@
+# Vagrant dependencies
 .vagrant/
+
+#Python virtual env
+py36env/
 
 #Special large file
 vagrant/newsdata.sql
-virtualenv/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
