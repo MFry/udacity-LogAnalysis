@@ -121,7 +121,7 @@ Vagrant.configure("2") do |config|
         sudo service postgresql restart
 
 
-        vagrantTip="The shared directory is located at /vagrant.\nTo access your shared files: cd /vagrant.\nDatabase \"news\" is connected via psql. To connect, use: psql -d news"
+        vagrantTip="The shared directory is located at /vagrant.\n To access your shared files: cd /vagrant.\n Database \"news\" is connected via psql. To connect, use: psql -d news"
         echo -e $vagrantTip > /etc/motd
         sudo apt-get -qq update
         sudo apt-get -qq upgrade

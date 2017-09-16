@@ -7,7 +7,7 @@ def connect():
 
     :return:
     """
-    return psycopg2.connect("dbname=news")
+    return psycopg2.connect("dbname=forums")
 
 
 @contextmanager
