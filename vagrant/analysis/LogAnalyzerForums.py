@@ -1,5 +1,6 @@
 import psycopg2
 from contextlib import contextmanager
+from pprint import pprint
 
 
 def connect():
@@ -7,7 +8,7 @@ def connect():
 
     :return:
     """
-    return psycopg2.connect("dbname=forums")
+    return psycopg2.connect("dbname=forum")
 
 
 @contextmanager
@@ -27,5 +28,6 @@ def get_cursor():
 
 if __name__ == '__main__':
     with get_cursor() as cur:
-        data = cur.execute('SELECT * FROM log LIMIT 10')
-        print(data)
+        cur.execute('SELECT * FROM log LIMIT 10;')
+        data = cur.fetchall()
+        pprint(data)
