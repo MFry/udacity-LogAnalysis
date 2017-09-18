@@ -91,7 +91,7 @@ Vagrant.configure("2") do |config|
         sudo ln -s /usr/local/bin/pip /usr/local/bin/pip3
         pip3 install --upgrade virtualenv
         virtualenv -p python3.6 /vagrant/analysis/py36env
-        source /vagrant/analysis/py36env/bin/active & cd/vagrant/analysis/ & make -f Makefile
+        source /vagrant/analysis/py36env/bin/active & cd /vagrant/analysis/ & make -f Makefile
         sudo rm get-pip.py
         #pip3 install sqlalchemy psycopg2 bleach requests
         ##############################
