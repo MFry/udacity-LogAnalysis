@@ -34,6 +34,8 @@ def getMostPopularArticles(top=3):
                        COUNT (path) AS total
                      FROM
                        log
+                     WHERE
+                       path is DISTINCT FROM '/'
                      GROUP BY
                        path
                      ORDER BY total DESC
