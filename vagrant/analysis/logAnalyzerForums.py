@@ -1,3 +1,4 @@
+#! /vagrant/analysis/py36env/bin/python3.6
 import psycopg2
 from contextlib import contextmanager
 from pprint import pprint
