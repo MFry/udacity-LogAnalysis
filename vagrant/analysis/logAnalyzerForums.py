@@ -26,22 +26,33 @@ def get_cursor():
         conn.close()
 
 
-def getMostPopularArticles(top=3):
-    with get_cursor() as cur:
+def getMostPopularArticles(cur, top=3):
         cur.execute('''
                      SELECT 
+                         path,
+                         COUNT (path) AS total
+                        FROM
+                         log
+                        WHERE
+                         path is DISTINCT FROM '/'
+                        GROUP BY
+                         path
+                        ORDER BY total DESC
+                     LIMIT %s;
+                    ''', (top, ))
+        return cur.fetchall()
+
+
+def listAllAuthorsPopularity():
+    with get_cursor() as cur:
+        cur.execute('''
+                    SELECT 
                        path,
                        COUNT (path) AS total
                      FROM
                        log
-                     WHERE
-                       path is DISTINCT FROM '/'
-                     GROUP BY
-                       path
-                     ORDER BY total DESC
-                     LIMIT %s;
-                    ''', (top, ))
-        return cur.fetchall()
+                     INNER JOIN articles ON 
+                    ''')
 
 
 if __name__ == '__main__':
@@ -49,4 +60,5 @@ if __name__ == '__main__':
         cur.execute('SELECT * FROM log LIMIT 10;')
         data = cur.fetchall()
         pprint(data)
-        pprint(getMostPopularArticles())
+        setURLPopularity(cur)
+        pprint(getMostPopularArticles(cur))
