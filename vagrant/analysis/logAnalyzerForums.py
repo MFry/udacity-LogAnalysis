@@ -71,7 +71,7 @@ def set_authors_popularity(cur):
                 ''')
 
 
-def getMostPopularArticles(cur, top=3):
+def get_most_popular_articles(cur, top=3):
     cur.execute('''
                  SELECT *
                  FROM article_hits
@@ -80,7 +80,7 @@ def getMostPopularArticles(cur, top=3):
     return cur.fetchall()
 
 
-def listAllAuthorsPopularity(cur, top=3):
+def get_most_popular_authors(cur, top=3):
     cur.execute('''
                 SELECT 
                    *
@@ -98,5 +98,5 @@ if __name__ == '__main__':
         set_url_popularity(cur)
         set_article_popularity(cur)
         set_authors_popularity(cur)
-        pprint(getMostPopularArticles(cur))
-        pprint(listAllAuthorsPopularity(cur))
+        pprint(get_most_popular_articles(cur))
+        pprint(get_most_popular_authors(cur))
