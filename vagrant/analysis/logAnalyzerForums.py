@@ -125,6 +125,7 @@ def get_largest_error_frequency_by_day(cur, top=1):
 
 if __name__ == '__main__':
     with get_cursor() as cur:
+        print('Testing database access. Getting first ten rows from table log.')
         cur.execute('SELECT * FROM log LIMIT 10;')
         data = cur.fetchall()
         pprint(data)
@@ -132,6 +133,9 @@ if __name__ == '__main__':
         set_article_popularity(cur)
         set_authors_popularity(cur)
         set_requests_by_day(cur)
+        print('Most popular articles:')
         pprint(get_most_popular_articles(cur))
+        print('Most popular authors:')
         pprint(get_most_popular_authors(cur))
+        print('Largest day with errors:')
         pprint(get_largest_error_frequency_by_day(cur))
